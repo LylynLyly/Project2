@@ -140,15 +140,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BrainInterface.cpp" />
+    <ClCompile Include="FieldSystem.cpp" />
     <ClCompile Include="GeometricBrain.cpp" />
     <ClCompile Include="Personnel.cpp" />
+    <ClCompile Include="GridField.cpp" />
     <ClCompile Include="Unit.cpp" />
     <ClCompile Include="Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BrainInterface.h" />
+    <ClInclude Include="FieldSystem.h" />
     <ClInclude Include="GeometricBrain.h" />
     <ClInclude Include="Personnel.h" />
+    <ClInclude Include="GridField.h" />
     <ClInclude Include="Unit.h" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>
