@@ -139,19 +139,20 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BrainInterface.cpp" />
+    <ClCompile Include="Commander.cpp" />
     <ClCompile Include="FieldSystem.cpp" />
-    <ClCompile Include="GeometricBrain.cpp" />
+    <ClCompile Include="GeometrySystem.cpp" />
     <ClCompile Include="Personnel.cpp" />
     <ClCompile Include="GridField.cpp" />
+    <ClCompile Include="TestCore.cpp" />
     <ClCompile Include="Unit.cpp" />
     <ClCompile Include="Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BrainInterface.h" />
+    <ClInclude Include="Commander.h" />
     <ClInclude Include="FieldSystem.h" />
-    <ClInclude Include="GeometricBrain.h" />
     <ClInclude Include="GeometryStats .h" />
+    <ClInclude Include="GeometrySystem.h" />
     <ClInclude Include="Personnel.h" />
     <ClInclude Include="GridField.h" />
     <ClInclude Include="Unit.h" />
