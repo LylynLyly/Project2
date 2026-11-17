@@ -6,5 +6,6 @@ private:
 public:
 	void calculateInfluence(const World& w) {};
 	const GridField<float>& getInfluence() const {return influence;}
+	GeometryStats analyzeGeometry(int team) const;
 };
 

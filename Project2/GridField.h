@@ -7,9 +7,9 @@ private:
 	size_t height_;
 	std::vector<T> data;
 public:
-	GridField(int x, int y, int z, T init);
-	T& at(int x, int y);
-	const T& at(int x, int y) const;
+	GridField(size_t width, size_t height, T initial);
+	T& at(size_t x, size_t y);
+	const T& at(size_t x, size_t y) const;
 	size_t width() const;
 	size_t height() const;
 };

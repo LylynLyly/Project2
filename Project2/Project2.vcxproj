@@ -151,6 +151,7 @@
     <ClInclude Include="BrainInterface.h" />
     <ClInclude Include="FieldSystem.h" />
     <ClInclude Include="GeometricBrain.h" />
+    <ClInclude Include="GeometryStats .h" />
     <ClInclude Include="Personnel.h" />
     <ClInclude Include="GridField.h" />
     <ClInclude Include="Unit.h" />
