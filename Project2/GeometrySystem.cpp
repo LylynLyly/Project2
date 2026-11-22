@@ -24,8 +24,8 @@ GeometryStats GeometrySystem::analyzeGeometry(int team, const GridField<float>& 
 				++stats.area;
 		}
 	}
-	const int dx[4] = { 1, -1, 0, 0 };
-	const int dy[4] = { 0, 0, 1, -1 };
+	const int dx[4] = { 1, -1, 0, 0 }; //
+	const int dy[4] = { 0, 0, 1, -1 }; //
 	auto floodFill = [&](int sx, int sy, uint8_t target, std::vector<uint8_t>& visited)
 		{
 			std::queue<std::pair<int, int>> q;
@@ -33,17 +33,25 @@ GeometryStats GeometrySystem::analyzeGeometry(int team, const GridField<float>& 
 			visited[index(sx, sy)] = 1;
 			while (!q.empty())
 			{
-				auto [x, y] = q.front();
+				auto [x, y] = q.front(); // auto [x, y]
 				q.pop();
 				for (int d = 0; d < 4; ++d)
 				{
-					int nx = x + dx[d];
-					int ny = y + dy[d];
+					int nx = x + dx[d]; //
+					int ny = y + dy[d]; //
 
 					if (nx < 0 || nx >= W || ny < 0 || ny >= H)
+					{
+						if (target == 1)
+							++stats.perimeter;
 						continue;
+					}
+
 
 					int id = index(nx, ny);
+
+					if (target == 1 && !mask[id])
+						++stats.perimeter;
 
 					if (!visited[id] && mask[id] == target)
 					{

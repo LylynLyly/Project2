@@ -1,5 +1,5 @@
 #pragma once
-class Personnel : public Unit
+class Personnel 
 {
 private:
 	double stamina,stress,hp;

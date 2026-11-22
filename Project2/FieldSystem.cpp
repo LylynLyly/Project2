@@ -5,6 +5,8 @@
 #include <stdexcept>
 #include "GeometryStats.h"
 #include "Vector.h"
+#include "Unit.h"
+#include "World.h"
 void FieldSystem::calculateInfluence(const World& w) 
 {
 	for (size_t x=0; x < influence.width(); x++)
@@ -12,23 +14,23 @@ void FieldSystem::calculateInfluence(const World& w)
 		for (size_t y=0; y < influence.height(); y++)
 		{
 			float total = 0.0;
-			for (const Unit& unit : w.getAgents())
+			for (const auto& unit : w.getUnits())
 			{
-				float distance = (unit.getPos() - Math::Vector(x, y));
-				float value = unit.getStrength() * gaussian(distance, 6.4);
-				if (unit.GetTeam() == 0)
+				float distance = (unit->getPos() - Math::Vector(x, y)).length();
+				float value = unit->getStrength() * gaussian(distance, 6.4);
+				if (unit->getTeam() == 0)
 					total += value;
 				else
-					total -= value
+					total -= value;
 			}
-			influence.at(x,y) = influence;
+			influence.at(x,y) = total;
 		}
 	}
 }
 GridField<float> FieldSystem::predictMove(const Unit& unit,const Math::Vector& newPosition) 
 {
     GridField<float> predicted = influence;
-    float sign = (unit.GetTeam() == 0) ? 1.0f : -1.0f;
+    float sign = (unit.getTeam() == 0) ? 1.0f : -1.0f;
     float strength = unit.getStrength() * sign;
     for (int y = 0; y < predicted.height(); ++y) 
     {
