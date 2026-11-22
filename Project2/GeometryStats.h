@@ -1,5 +1,5 @@
 #pragma once
-struct GeometryStats 
+struct GeometryStats
 {
     int area = 0;
     int perimeter = 0;

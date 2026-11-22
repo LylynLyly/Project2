@@ -2,17 +2,16 @@
 #include <vector>
 #include <queue>
 #include <cstdint>
-#include <stdexcept>
-#include "GridField.h"
-GeometryStats GeometrySystem::analyzeGeometry(int team, const GridField<float>& influence)
+#include <utility>
+GeometryStats GeometrySystem::analyzeGeometry(int team, const GridField<float>& influence) const
 {
 	GeometryStats stats;
 	const int W = static_cast<int>(influence.width());
 	const int H = static_cast<int>(influence.height());
 	auto index = [W](int x, int y) {return y * W + x;};
-	std::vector<uint8_t> mask(W * H, 0);
-	std::vector<uint8_t> visited(W * H, 0);
-	std::vector<uint8_t> outside(W * H, 0);
+	std::vector<std::uint8_t> mask(W * H, 0);
+	std::vector<std::uint8_t> visited(W * H, 0);
+	std::vector<std::uint8_t> outside(W * H, 0);
 	for (int x = 0; x < W; x++)
 	{
 		for (int y = 0; y < H; y++)
@@ -26,7 +25,7 @@ GeometryStats GeometrySystem::analyzeGeometry(int team, const GridField<float>& 
 	}
 	const int dx[4] = { 1, -1, 0, 0 }; //
 	const int dy[4] = { 0, 0, 1, -1 }; //
-	auto floodFill = [&](int sx, int sy, uint8_t target, std::vector<uint8_t>& visited)
+	auto floodFill = [&](int sx, int sy, std::uint8_t target, std::vector<std::uint8_t>& visited)
 		{
 			std::queue<std::pair<int, int>> q;
 			q.push({ sx, sy });

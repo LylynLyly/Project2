@@ -62,7 +62,7 @@
     <ClInclude Include="FieldSystem.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="GeometryStats .h">
+    <ClInclude Include="GeometryStats.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="GeometrySystem.h">

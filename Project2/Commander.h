@@ -1,5 +1,4 @@
 #pragma once
-#include "GeometryStats .h"
 #include "Vector.h"
 #include "FieldSystem.h"
 #include "Unit.h"

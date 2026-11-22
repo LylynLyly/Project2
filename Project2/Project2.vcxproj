@@ -24,6 +24,7 @@
     <ProjectGuid>{a40d40bf-6f57-415d-a6cd-67160b9ca013}</ProjectGuid>
     <RootNamespace>Project2</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <VcpkgEnableManifest>true</VcpkgEnableManifest>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -53,6 +54,14 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <PropertyGroup Condition="'$(BuildSimulation)' == 'true'">
+    <TargetName>Simulation</TargetName>
+    <VcpkgEnableManifest>false</VcpkgEnableManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <UseProjectVcpkg Condition="'$(BuildSimulation)' != 'true' and '$(VcpkgPropsImported)' != 'true' and Exists('$(VCPKG_ROOT)\scripts\buildsystems\msbuild\vcpkg.props')">true</UseProjectVcpkg>
+  </PropertyGroup>
+  <Import Project="$(VCPKG_ROOT)\scripts\buildsystems\msbuild\vcpkg.props" Condition="'$(UseProjectVcpkg)' == 'true'" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="Shared">
@@ -141,10 +150,14 @@
   <ItemGroup>
     <ClCompile Include="Commander.cpp" />
     <ClCompile Include="FieldSystem.cpp" />
+    <ClCompile Include="Gaussian.cpp" />
     <ClCompile Include="GeometrySystem.cpp" />
     <ClCompile Include="Personnel.cpp" />
     <ClCompile Include="GridField.cpp" />
-    <ClCompile Include="TestCore.cpp" />
+    <ClCompile Include="Simulation.cpp" />
+    <ClCompile Include="TestCore.cpp">
+      <PreprocessorDefinitions Condition="'$(BuildSimulation)' == 'true'">BUILD_SIMULATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
     <ClCompile Include="Unit.cpp" />
     <ClCompile Include="Vector.cpp" />
     <ClCompile Include="World.cpp" />
@@ -152,15 +165,18 @@
   <ItemGroup>
     <ClInclude Include="Commander.h" />
     <ClInclude Include="FieldSystem.h" />
-    <ClInclude Include="GeometryStats .h" />
+    <ClInclude Include="GeometryStats.h" />
     <ClInclude Include="GeometrySystem.h" />
+    <ClInclude Include="LocalForces.h" />
     <ClInclude Include="Personnel.h" />
     <ClInclude Include="GridField.h" />
+    <ClInclude Include="Simulation.h" />
     <ClInclude Include="Unit.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <Import Project="$(VCPKG_ROOT)\scripts\buildsystems\msbuild\vcpkg.targets" Condition="'$(UseProjectVcpkg)' == 'true'" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 </Project>

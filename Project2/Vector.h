@@ -1,5 +1,4 @@
 #pragma once
-#include <cmath>
 namespace Math
 {
     class Vector
@@ -9,8 +8,10 @@ namespace Math
 
     public:
         Vector(int x, int y);
-        Vector operator+(const Vector& other);
-        Vector operator-(const Vector& other);
-        double length();
+        Vector operator+(const Vector& other) const;
+        Vector operator-(const Vector& other) const;
+        int getX() const;
+        int getY() const;
+        double length() const;
     };
 }

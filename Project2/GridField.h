@@ -1,17 +1,18 @@
 #pragma once
+#include <cstddef>
 #include <vector>
 template<typename T>
 class GridField
 {
 private:
-	size_t width_;
-	size_t height_;
+	std::size_t width_;
+	std::size_t height_;
 	std::vector<T> data;
 public:
-	GridField(size_t width, size_t height, T initial);
-	T& at(size_t x, size_t y);
-	const T& at(size_t x, size_t y) const;
-	size_t width() const;
-	size_t height() const;
+	GridField(std::size_t width, std::size_t height, T initial);
+	T& at(std::size_t x, std::size_t y);
+	const T& at(std::size_t x, std::size_t y) const;
+	std::size_t width() const;
+	std::size_t height() const;
 };
 

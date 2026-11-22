@@ -1,13 +1,17 @@
 #pragma once
 #include <vector>
 #include <memory>
+#include <cstdint>
 #include "Unit.h"
 class World
 {
 private:
-	__int8 witdh, height;
+	std::int8_t width{}, height{};
 	std::vector<std::unique_ptr<Unit>> units;
 public:
-	std::vector<std::unique_ptr<Unit>> getUnits() const { return units; }
+	World() = default;
+	World(std::int8_t width, std::int8_t height);
+	void addUnit(std::unique_ptr<Unit> unit);
+	const std::vector<std::unique_ptr<Unit>>& getUnits() const { return units; }
 };
 
