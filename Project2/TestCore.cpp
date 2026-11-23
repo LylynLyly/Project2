@@ -2,36 +2,61 @@
 
 #include <iostream>
 #include <memory>
+#include <vector>
 #include "Commander.h"
+#include "CombatSystem.h"
 #include "FieldSystem.h"
 #include "GeometrySystem.h"
 #include "Simulation.h"
 #include "Unit.h"
+#include "Personnel.h"
 #include "World.h"
 
 int main()
 {
-    World world(30, 30);
-    world.addUnit(std::make_unique<Unit>(Math::Vector(3, 8), 0, 2));
-    world.addUnit(std::make_unique<Unit>(Math::Vector(7, 22), 0, 2));
-    world.addUnit(std::make_unique<Unit>(Math::Vector(18, 10), 1, 2));
-    world.addUnit(std::make_unique<Unit>(Math::Vector(24, 20), 1, 2));
+    World world(60, 60);
+    // This scenario contains only personnel units.
+    world.addUnit(std::make_unique<Personnel>(
+        Math::Vector(3, 8), 0, 6.0, std::vector<double>{ 1.6, 0.0, 0.2 }, 5.0, 1.0, 0.5));
+    world.addUnit(std::make_unique<Personnel>(
+        Math::Vector(7, 22), 0, 6.0, std::vector<double>{ 1.6, 0.0, 0.2 }, 5.0, 1.0, 0.5));
+    world.addUnit(std::make_unique<Personnel>(
+        Math::Vector(18, 10), 1, 6.0, std::vector<double>{ 0.4, 0.0, 1.5 }, 5.0, 1.5, 1.2));
+    world.addUnit(std::make_unique<Personnel>(
+        Math::Vector(24, 20), 1, 6.0, std::vector<double>{ 0.4, 0.0, 1.5 }, 5.0, 1.5, 1.2));
 
-    FieldSystem field(30, 30);
+    FieldSystem field(60, 60);
     GeometrySystem geometry;
     Commander commander;
-    Simulation simulation(world, field, geometry, commander);
+    CombatSystem combat;
+    Simulation simulation(world, field, geometry, commander, combat);
 
-    for (int step = 0; step < 10; ++step)
+    for (int step = 0; step < 30; ++step)
     {
+        // Demonstration: first prioritize area, then risk, then balance both.
+        const double coefA = step < 3 ? 12.0 : step < 6 ? 0.05 : 1.0;
+        const double coefR = step < 3 ? 0.05 : step < 6 ? 12.0 : 1.0;
+        for (const auto& unit : world.getUnits())
+            unit->setCoefficients(coefA, coefR);
+
         simulation.tick();
         const auto firstTeam = geometry.analyzeGeometry(0, field.getInfluence());
         const auto secondTeam = geometry.analyzeGeometry(1, field.getInfluence());
         std::cout << "Step " << step + 1 << ": team 0 area=" << firstTeam.area
-            << ", team 1 area=" << secondTeam.area << '\n';
+            << ", team 1 area=" << secondTeam.area
+            << ", coefA=" << coefA << ", coefR=" << coefR << '\n';
         for (const auto& unit : world.getUnits())
+        {
+            const auto score = commander.scorePosition(world, *unit, field, geometry, unit->getPos());
             std::cout << "  team " << unit->getTeam() << " at ("
-                << unit->getPos().getX() << ", " << unit->getPos().getY() << ")\n";
+                << unit->getPos().getX() << ", " << unit->getPos().getY()
+                << "), strength=" << unit->getStrength() << '\n';
+            const auto& profile = unit->getCombatProfile();
+            std::cout << "    combatProfile: close=" << profile[0]
+                << ", mid=" << profile[1] << ", long=" << profile[2] << '\n';
+            std::cout << "    score: area=" << score.area << ", risk=" << score.risk
+                << ", total=" << score.total << '\n';
+        }
     }
 
     std::cout << "Final map (A=team 0, B=team 1, +=team 0 influence, -=team 1 influence):\n";

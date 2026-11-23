@@ -1,6 +1,18 @@
 #include "Commander.h"
 #include "GeometryStats.h"
-Math::Vector Commander::choosePosition(const Unit& unit,const FieldSystem& field,const GeometrySystem& analyzer)
+
+ScoreBreakdown Commander::scorePosition(const World& world, const Unit& unit, const FieldSystem& field, const GeometrySystem& analyzer, const Math::Vector& position) const
+{
+    const auto before = analyzer.analyzeGeometry(unit.getTeam(), field.getInfluence());
+    const auto predicted = field.predictMove(unit, position);
+    const auto after = analyzer.analyzeGeometry(unit.getTeam(), predicted);
+
+    const double area = unit.getCoefa() * static_cast<double>(after.area - before.area);
+    const double risk = unit.getCoefr() * field.calculateForces(world, unit, position).balance();
+    return { area, risk, area + risk };
+}
+
+Math::Vector Commander::choosePosition(const World& world,const Unit& unit,const FieldSystem& field,const GeometrySystem& analyzer)
 {
     GeometryStats before = analyzer.analyzeGeometry(unit.getTeam(), field.getInfluence());
     Math::Vector bestPos = unit.getPos();
@@ -23,7 +35,7 @@ Math::Vector Commander::choosePosition(const Unit& unit,const FieldSystem& field
 
         auto predicted = field.predictMove(unit, candidate);
         GeometryStats after = analyzer.analyzeGeometry(unit.getTeam(), predicted);
-        float score = unit.getCoefa() * static_cast<float>(after.area - before.area) + unit.getCoefr() * ;
+        float score = unit.getCoefa() * static_cast<float>(after.area - before.area) + unit.getCoefr() * field.calculateForces(world,unit,candidate).balance();
         if (score > bestScore) 
         {
             bestScore = score;

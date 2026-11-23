@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClCompile Include="CombatSystem.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
     <Filter Include="Исходные файлы">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
@@ -18,6 +21,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CombatSystem.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
     <ClCompile Include="Vector.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -43,6 +49,15 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="World.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Gaussian.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Simulation.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Vehicle.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -72,6 +87,15 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="World.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalForces.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Simulation.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Vehicle.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

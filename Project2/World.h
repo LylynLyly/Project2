@@ -12,6 +12,7 @@ public:
 	World() = default;
 	World(std::int8_t width, std::int8_t height);
 	void addUnit(std::unique_ptr<Unit> unit);
+	void removeDestroyedUnits();
 	const std::vector<std::unique_ptr<Unit>>& getUnits() const { return units; }
 };
 

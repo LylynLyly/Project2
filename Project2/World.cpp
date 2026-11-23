@@ -1,4 +1,5 @@
 #include "World.h"
+#include <algorithm>
 #include <stdexcept>
 #include <utility>
 
@@ -11,4 +12,12 @@ void World::addUnit(std::unique_ptr<Unit> unit)
 		throw std::invalid_argument("World::addUnit requires a unit");
 
 	units.push_back(std::move(unit));
+}
+
+void World::removeDestroyedUnits()
+{
+	std::erase_if(units, [](const std::unique_ptr<Unit>& unit)
+	{
+		return unit->isDestroyed();
+	});
 }

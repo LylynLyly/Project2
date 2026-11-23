@@ -53,13 +53,13 @@ GridField<float> FieldSystem::predictMove(const Unit& unit, const Math::Vector& 
 LocalForces FieldSystem::calculateForces(const World& world, const Unit& self, const Math::Vector& position) const
 {
 	LocalForces result;
-	result.allies = self.getStrength();
+	result.allies = static_cast<float>(self.getStrength() * self.getCombatCoefficient(0.0));
 	for (const auto& other : world.getUnits())
 	{
 		if (other.get() == &self)
 			continue;
 		double distance = (other->getPos() - position).length();
-		float contribution = other->getStrength() * gaussian(distance, 6.4f);
+		float contribution = static_cast<float>(other->getStrength() * other->getCombatCoefficient(distance) * gaussian(distance, 6.4f));
 		if (other->getTeam() == self.getTeam())
 			result.allies += contribution;
 		else
