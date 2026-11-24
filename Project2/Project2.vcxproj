@@ -155,9 +155,12 @@
     <ClCompile Include="GeometrySystem.cpp" />
     <ClCompile Include="Personnel.cpp" />
     <ClCompile Include="GridField.cpp" />
+    <ClCompile Include="main.cpp">
+      <ExcludedFromBuild Condition="'$(BuildSimulation)' != 'true'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Simulation.cpp" />
     <ClCompile Include="TestCore.cpp">
-      <PreprocessorDefinitions Condition="'$(BuildSimulation)' == 'true'">BUILD_SIMULATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExcludedFromBuild Condition="'$(BuildSimulation)' == 'true'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Unit.cpp" />
     <ClCompile Include="Vector.cpp" />

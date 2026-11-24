@@ -18,7 +18,7 @@ void FieldSystem::calculateInfluence(const World& w)
 			{
 				float distance = static_cast<float>(
 					(unit->getPos() - Math::Vector(static_cast<int>(x), static_cast<int>(y))).length());
-				float value = static_cast<float>(unit->getStrength() * gaussian(distance, 6.4));
+				float value = static_cast<float>(unit->getControlStrength() * gaussian(distance, 6.4));
 				if (unit->getTeam() == 0)
 					total += value;
 				else
@@ -33,7 +33,7 @@ GridField<float> FieldSystem::predictMove(const Unit& unit, const Math::Vector& 
 {
     GridField<float> predicted = influence;
     float sign = (unit.getTeam() == 0) ? 1.0f : -1.0f;
-    float strength = unit.getStrength() * sign;
+    float strength = static_cast<float>(unit.getControlStrength() * sign);
     for (std::size_t y = 0; y < predicted.height(); ++y)
     {
         for (std::size_t x = 0; x < predicted.width(); ++x)

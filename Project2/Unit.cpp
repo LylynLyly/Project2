@@ -5,7 +5,7 @@
 
 Unit::Unit(Math::Vector position, int team, double strength, std::vector<double> combatProfile, double area, double damage, double armorPiercing)
 	: position(position), team(team), influence(0.0), utility(0.0), coef_a(1.0), coef_r(1.0),
-	strength(strength), area(area), damage(damage), armor_piercing(armorPiercing), combatProfile(std::move(combatProfile))
+	strength(strength), initialStrength(strength), area(area), damage(damage), armor_piercing(armorPiercing), combatProfile(std::move(combatProfile))
 {
 	if (this->combatProfile.size() != 3)
 		throw std::invalid_argument("combatProfile must contain close, mid and long range coefficients");
@@ -29,6 +29,16 @@ int Unit::getTeam() const
 double Unit::getStrength() const
 {
 	return strength;
+}
+
+double Unit::getInitialStrength() const
+{
+	return initialStrength;
+}
+
+double Unit::getControlStrength() const
+{
+	return getStrength();
 }
 
 double Unit::getArea() const { return area; }

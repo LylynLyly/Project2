@@ -1,83 +1,3 @@
-#ifdef BUILD_SIMULATION
-
-#include <iostream>
-#include <memory>
-#include <vector>
-#include "Commander.h"
-#include "CombatSystem.h"
-#include "FieldSystem.h"
-#include "GeometrySystem.h"
-#include "Simulation.h"
-#include "Unit.h"
-#include "Personnel.h"
-#include "World.h"
-
-int main()
-{
-    World world(60, 60);
-    // This scenario contains only personnel units.
-    world.addUnit(std::make_unique<Personnel>(
-        Math::Vector(3, 8), 0, 6.0, std::vector<double>{ 1.6, 0.0, 0.2 }, 5.0, 1.0, 0.5));
-    world.addUnit(std::make_unique<Personnel>(
-        Math::Vector(7, 22), 0, 6.0, std::vector<double>{ 1.6, 0.0, 0.2 }, 5.0, 1.0, 0.5));
-    world.addUnit(std::make_unique<Personnel>(
-        Math::Vector(18, 10), 1, 6.0, std::vector<double>{ 0.4, 0.0, 1.5 }, 5.0, 1.5, 1.2));
-    world.addUnit(std::make_unique<Personnel>(
-        Math::Vector(24, 20), 1, 6.0, std::vector<double>{ 0.4, 0.0, 1.5 }, 5.0, 1.5, 1.2));
-
-    FieldSystem field(60, 60);
-    GeometrySystem geometry;
-    Commander commander;
-    CombatSystem combat;
-    Simulation simulation(world, field, geometry, commander, combat);
-
-    for (int step = 0; step < 30; ++step)
-    {
-        // Demonstration: first prioritize area, then risk, then balance both.
-        const double coefA = step < 3 ? 12.0 : step < 6 ? 0.05 : 1.0;
-        const double coefR = step < 3 ? 0.05 : step < 6 ? 12.0 : 1.0;
-        for (const auto& unit : world.getUnits())
-            unit->setCoefficients(coefA, coefR);
-
-        simulation.tick();
-        const auto firstTeam = geometry.analyzeGeometry(0, field.getInfluence());
-        const auto secondTeam = geometry.analyzeGeometry(1, field.getInfluence());
-        std::cout << "Step " << step + 1 << ": team 0 area=" << firstTeam.area
-            << ", team 1 area=" << secondTeam.area
-            << ", coefA=" << coefA << ", coefR=" << coefR << '\n';
-        for (const auto& unit : world.getUnits())
-        {
-            const auto score = commander.scorePosition(world, *unit, field, geometry, unit->getPos());
-            std::cout << "  team " << unit->getTeam() << " at ("
-                << unit->getPos().getX() << ", " << unit->getPos().getY()
-                << "), strength=" << unit->getStrength() << '\n';
-            const auto& profile = unit->getCombatProfile();
-            std::cout << "    combatProfile: close=" << profile[0]
-                << ", mid=" << profile[1] << ", long=" << profile[2] << '\n';
-            std::cout << "    score: area=" << score.area << ", risk=" << score.risk
-                << ", total=" << score.total << '\n';
-        }
-    }
-
-    std::cout << "Final map (A=team 0, B=team 1, +=team 0 influence, -=team 1 influence):\n";
-    for (std::size_t y = 0; y < field.getInfluence().height(); ++y)
-    {
-        for (std::size_t x = 0; x < field.getInfluence().width(); ++x)
-        {
-            const float value = field.getInfluence().at(x, y);
-            char cell = value > 0.055f ? '+' : value < -0.055f ? '-' : '.';
-            for (const auto& unit : world.getUnits())
-                if (unit->getPos().getX() == static_cast<int>(x) &&
-                    unit->getPos().getY() == static_cast<int>(y))
-                    cell = unit->getTeam() == 0 ? 'A' : 'B';
-            std::cout << cell;
-        }
-        std::cout << '\n';
-    }
-}
-
-#else
-
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_session.hpp>
@@ -89,6 +9,8 @@ int main()
 #include "GeometryStats.h"
 #include "GeometrySystem.h"
 #include "Unit.h"
+#include "Personnel.h"
+#include "Vehicle.h"
 #include "World.h"
 
 int main(int argc, char* argv[])
@@ -173,6 +95,29 @@ TEST_CASE("World owns added units and exposes them to FieldSystem", "[World][Fie
     CHECK(field.getInfluence().at(1, 0) > 0.0f);
 }
 
+TEST_CASE("Personnel and vehicles use polymorphic territorial control strength", "[Unit][FieldSystem]")
+{
+    std::unique_ptr<Unit> personnel = std::make_unique<Personnel>(Math::Vector(0, 0), 0, 6.0);
+    std::unique_ptr<Unit> vehicle = std::make_unique<Vehicle>(Math::Vector(0, 0), 0, 6.0, 1.0);
+
+    CHECK(personnel->getInitialStrength() == 6.0);
+    CHECK(vehicle->getInitialStrength() == 6.0);
+    CHECK(personnel->getControlStrength() == 6.0);
+    CHECK(vehicle->getControlStrength() == 6.0);
+
+    personnel->receiveDamage(3.0);
+    vehicle->receiveDamage(3.0);
+
+    CHECK(personnel->getControlStrength() == Catch::Approx(1.5));
+    CHECK(vehicle->getControlStrength() == 3.0);
+
+    personnel->receiveDamage(3.0);
+    vehicle->receiveDamage(3.0);
+
+    CHECK(personnel->getControlStrength() == 0.0);
+    CHECK(vehicle->getControlStrength() == 0.0);
+}
+
 TEST_CASE("GeometryStats defaults all counters to zero", "[GeometryStats]")
 {
     const GeometryStats stats;
@@ -210,4 +155,3 @@ TEST_CASE("GeometrySystem reports a ring and a separate component for one team",
     CHECK(secondTeam.holes == 0);
 }
 
-#endif

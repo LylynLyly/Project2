@@ -1,7 +1,6 @@
 #pragma once
 #include <vector>
 #include <memory>
-#include <cstdint>
 #include "Unit.h"
 class World
 {
@@ -16,3 +15,4 @@ public:
 	const std::vector<std::unique_ptr<Unit>>& getUnits() const { return units; }
 };
 
+#include <cstdint>
